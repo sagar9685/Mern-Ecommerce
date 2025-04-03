@@ -82,7 +82,6 @@ const List = () => {
   }
 
   function handleAddtoCart(getCurrentProductId) {
-    console.log(getCurrentProductId, "sagar ja ");
     dispatch(
       addToCart({
         userId: user?.id,
