@@ -21,7 +21,7 @@ const CommonForm = ({
 }) => {
   function renderInput(getcontrollItem) {
     let element = null;
-    const value = FormData[getcontrollItem.name] || "";
+    const value = formData[getcontrollItem.name] || "";
 
     switch (getcontrollItem.componentType) {
       case "input":

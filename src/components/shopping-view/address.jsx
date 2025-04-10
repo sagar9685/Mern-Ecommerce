@@ -21,22 +21,14 @@ const initialAddressFormData = {
 };
 
 function Address({ setCurrentSelectedAddress, selectedId }) {
-  //const [formData, setFormData] = useState(initalAddressFormData);
   const [formData, setFormData] = useState(initialAddressFormData);
   const [currentEditedId, setCurrentEditedId] = useState(null);
-
   const dispatch = useDispatch();
-
   const { user } = useSelector((state) => state.auth);
-
   const { addressList } = useSelector((state) => state.shopAddress);
-
   const { toast } = useToast();
 
-  function hadndleManageAddress(event) {
-    // setFormData(initalAddressFormData);
-    event.preventDefault();
-
+  function handleManageAddress(event) {
     event.preventDefault();
 
     if (addressList.length >= 3 && currentEditedId === null) {
@@ -89,21 +81,21 @@ function Address({ setCurrentSelectedAddress, selectedId }) {
       if (data?.payload?.success) {
         dispatch(fetchAllAddresses(user?.id));
         toast({
-          title: "Address Deleted Successfully",
+          title: "Address deleted successfully",
         });
       }
     });
   }
 
-  function handleEditAddress(getCurrentAddress) {
-    setCurrentEditedId(getCurrentAddress?._id);
+  function handleEditAddress(getCuurentAddress) {
+    setCurrentEditedId(getCuurentAddress?._id);
     setFormData({
       ...formData,
-      address: getCurrentAddress?.address,
-      city: getCurrentAddress?.city,
-      phone: getCurrentAddress?.phone,
-      pincode: getCurrentAddress?.pincode,
-      notes: getCurrentAddress?.notes,
+      address: getCurrentAddress?.address || "",
+      city: getCurrentAddress?.city || "",
+      phone: getCurrentAddress?.phone || "",
+      pincode: getCurrentAddress?.pincode || "",
+      notes: getCurrentAddress?.notes || "",
     });
   }
 
@@ -117,9 +109,11 @@ function Address({ setCurrentSelectedAddress, selectedId }) {
     dispatch(fetchAllAddresses(user?.id));
   }, [dispatch]);
 
+  console.log(addressList, "addressList");
+
   return (
     <Card>
-      <div className="mb-5 p-3 grid grid-cols-1 sm:grid-cols-2   gap-2">
+      <div className="mb-5 p-3 grid grid-cols-1 sm:grid-cols-2  gap-2">
         {addressList && addressList.length > 0
           ? addressList.map((singleAddressItem) => (
               <AddressCard
@@ -143,7 +137,7 @@ function Address({ setCurrentSelectedAddress, selectedId }) {
           formData={formData}
           setFormData={setFormData}
           buttonText={currentEditedId !== null ? "Edit" : "Add"}
-          onSubmit={hadndleManageAddress}
+          onSubmit={handleManageAddress}
           isBtnDisabled={!isFormValid()}
         />
       </CardContent>
