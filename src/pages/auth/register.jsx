@@ -11,15 +11,15 @@ const initialState = {
   password: "",
 };
 
-const register = () => {
-  const [FormData, setFormData] = useState(initialState);
+const Register = () => {
+  const [formData, setFormData] = useState(initialState);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
 
   function onSubmit(event) {
     event.preventDefault();
-    dispatch(registerUser(FormData)).then((data) => {
+    dispatch(registerUser(formData)).then((data) => {
       if (data?.payload?.success) {
         toast({
           title: data?.payload?.message,
@@ -33,7 +33,7 @@ const register = () => {
       }
     });
   }
-  console.log(FormData);
+  console.log(formData);
 
   return (
     <div className="mx-auto w-full max-w-wd space-y-6">
@@ -54,7 +54,7 @@ const register = () => {
       <CommonForm
         formControls={registerFormContorls}
         buttonText={"Sign Up"}
-        FormData={FormData}
+        formData={formData}
         setFormData={setFormData}
         onSubmit={onSubmit}
       />
@@ -62,4 +62,4 @@ const register = () => {
   );
 };
 
-export default register;
+export default Register;

@@ -1,6 +1,7 @@
-import { Dialog } from "@radix-ui/react-dialog";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Dialog } from "../ui/dialog";
 import {
   Table,
   TableBody,
@@ -9,51 +10,47 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-import ShoppingOrderDetailsView from "./order-details";
-import { useEffect, useState } from "react";
+import { Badge } from "../ui/badge";
+import AdminOrderDetailsView from "./order-details";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  getAllOrderByUser,
-  getOrderDetails,
-  resetOrderDetails,
-} from "@/store/shop/order-slice";
-import { Badge } from "../ui/badge";
+  getAllOrderForAdmin,
+  getOrderDetailsForAdmin,
+  resetOrderDetailsForAdmin,
+} from "@/store/admin/order-slice";
 
-function ShoppingOrders() {
+function AdminOrder() {
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
+  const { orderList, orderDetails } = useSelector((state) => state.adminOrder);
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
-  const { orderList, orderDetails } = useSelector((state) => state.shopOrder);
 
   function handleFetchOrderDetails(getId) {
-    dispatch(getOrderDetails(getId));
+    dispatch(getOrderDetailsForAdmin(getId));
   }
 
   useEffect(() => {
-    dispatch(getAllOrderByUser(user?.id));
+    dispatch(getAllOrderForAdmin());
   }, [dispatch]);
 
   useEffect(() => {
     if (orderDetails !== null) setOpenDetailsDialog(true);
   }, [orderDetails]);
 
-  console.log(orderDetails, "orderDetails recived");
-
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Order History</CardTitle>
+        <CardTitle>All Orders</CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Order Id</TableHead>
+              <TableHead>Order ID</TableHead>
               <TableHead>Order Date</TableHead>
               <TableHead>Order Status</TableHead>
               <TableHead>Order Price</TableHead>
               <TableHead>
-                <span className="sr-only"> Details </span>
+                <span className="sr-only">Details</span>
               </TableHead>
             </TableRow>
           </TableHeader>
@@ -62,10 +59,7 @@ function ShoppingOrders() {
               ? orderList.map((orderItem) => (
                   <TableRow>
                     <TableCell>{orderItem?._id}</TableCell>
-                    <TableCell>
-                      {" "}
-                      {orderItem?.orderDate.split("T")[0]}{" "}
-                    </TableCell>
+                    <TableCell>{orderItem?.orderDate.split("T")[0]}</TableCell>
                     <TableCell>
                       <Badge
                         className={`py-1 px-3 ${
@@ -76,16 +70,16 @@ function ShoppingOrders() {
                             : "bg-black"
                         }`}
                       >
-                        {orderItem?.orderStatus}{" "}
+                        {orderItem?.orderStatus}
                       </Badge>
                     </TableCell>
-                    <TableCell>{orderItem?.totalAmount}</TableCell>
+                    <TableCell>${orderItem?.totalAmount}</TableCell>
                     <TableCell>
                       <Dialog
                         open={openDetailsDialog}
                         onOpenChange={() => {
                           setOpenDetailsDialog(false);
-                          dispatch(resetOrderDetails());
+                          dispatch(resetOrderDetailsForAdmin());
                         }}
                       >
                         <Button
@@ -95,7 +89,7 @@ function ShoppingOrders() {
                         >
                           View Details
                         </Button>
-                        <ShoppingOrderDetailsView orderDetails={orderDetails} />
+                        <AdminOrderDetailsView orderDetails={orderDetails} />
                       </Dialog>
                     </TableCell>
                   </TableRow>
@@ -108,4 +102,4 @@ function ShoppingOrders() {
   );
 }
 
-export default ShoppingOrders;
+export default AdminOrder;

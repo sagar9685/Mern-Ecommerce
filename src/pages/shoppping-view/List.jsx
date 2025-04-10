@@ -49,6 +49,8 @@ const List = () => {
 
   const { toast } = useToast();
 
+  const categorySearchParam = searchParams.get("category");
+
   //fetch list of prodcut
 
   function handleSort(value) {
@@ -101,7 +103,7 @@ const List = () => {
   useEffect(() => {
     setSort("price-lowtohigh");
     setFilters(JSON.parse(sessionStorage.getItem("filters")) || {});
-  }, []);
+  }, [categorySearchParam]);
 
   useEffect(() => {
     if (filters && Object.keys.length > 0) {
@@ -120,6 +122,8 @@ const List = () => {
   useEffect(() => {
     if (productDetails !== null) setOpenDetailsDialog(true);
   }, [productDetails]);
+
+  console.log(productList, "sagar product list");
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6">
