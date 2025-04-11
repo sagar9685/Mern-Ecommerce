@@ -39,6 +39,15 @@ function App() {
   return (
     <Routes>
       <Route
+        path="/"
+        element={
+          <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+            <Layout />
+          </CheckAuth>
+        }
+      />
+
+      <Route
         path="/auth"
         element={
           <CheckAuth isAuthenticated={isAuthenticated} user={user}>
