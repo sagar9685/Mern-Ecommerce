@@ -40,6 +40,9 @@ const List = () => {
   const { productList, productDetails } = useSelector(
     (state) => state.shopProducts
   );
+
+  const { cartItems } = useSelector((state) => state.shopCart);
+
   const { user } = useSelector((state) => state.auth);
 
   const [filters, setFilters] = useState({});
@@ -83,7 +86,28 @@ const List = () => {
     dispatch(fetchProductsDetails(getCurrentProductId));
   }
 
-  function handleAddtoCart(getCurrentProductId) {
+  function handleAddtoCart(getCurrentProductId, getTotalStock) {
+    console.log(cartItems, "sagar cart item");
+    let getcartItems = cartItems.items || [];
+
+    if (getcartItems.length > 0) {
+      const indexOfCurrentItem = getcartItems.findIndex(
+        (item) => item.productId === getCurrentProductId
+      );
+
+      if (indexOfCurrentItem > -1) {
+        const getQuantity = getcartItems[indexOfCurrentItem].quantity;
+
+        if (getQuantity + 1 > getTotalStock) {
+          toast({
+            title: `only ${getQuantity} quantity can be added for this item`,
+            variant: "destructive",
+          });
+          return;
+        }
+      }
+    }
+
     dispatch(
       addToCart({
         userId: user?.id,
