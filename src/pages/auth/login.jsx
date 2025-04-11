@@ -27,6 +27,7 @@ const login = () => {
       } else {
         toast({
           title: data?.payload?.message,
+          variant: "destructive",
         });
       }
     });
